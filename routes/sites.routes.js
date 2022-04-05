@@ -14,27 +14,20 @@ router.get('/', async (req, res) => {
             headers: { 'Authorization': access_token }
         })
 
-        const response = await sites.data;
-        res.send(response);
+        const { data } = await sites;
+
+        const dataSites = data.map(site => {
+            return {
+                siteId: site.id,
+                siteName: site.display_name.substring(site.display_name.indexOf(' ') + 1)
+            }
+        })
+        res.send(dataSites);
     } catch (error) {
         res.send(error.message);
     }
 
 });
-
-
-// Return all site's id
-router.get('/ids', async (req, res) => {
-
-    try {
-        const { data: sites } = await axios.get(`${process.env.BASE_URL}/api/sites`);
-        const allIds = sites.map(site => site.id);
-        res.send(allIds);
-    } catch (error) {
-        res.send(error.message);
-    }
-
-})
 
 
 module.exports = router;

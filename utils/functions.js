@@ -48,7 +48,9 @@ const getToken = async () => {
         data: { 'grant_type': 'client_credentials' }
     });
 
-    return createToken;
+    const { data: token } = await createToken;
+
+    return token;
 }
 
 module.exports = {

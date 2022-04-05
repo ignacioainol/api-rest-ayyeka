@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
+require('./database');
 const morgan = require('morgan');
-const { executeCommand } = require('./utils/functions');
+const { getToken } = require('./utils/functions');
 require('dotenv').config();
 
 //config
