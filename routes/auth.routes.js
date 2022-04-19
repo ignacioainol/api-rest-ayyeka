@@ -49,8 +49,8 @@ const router = express.Router();
 // })
 
 router.get('/', async (req, res) => {
-    const token = await executeCommand();
-    res.send(token);
+    await executeCommand();
+    res.send('Token creado');
 })
 
 module.exports = router;

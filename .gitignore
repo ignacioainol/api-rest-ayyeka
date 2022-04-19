@@ -1,2 +1,4 @@
 node_modules/
 .env
+bitacora.txt
+access_token.json

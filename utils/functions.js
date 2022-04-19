@@ -13,7 +13,7 @@ const executeCommand = async () => {
             -H 'cache-control: no-cache' \
             -d 'grant_type=client_credentials'";
 
-    const valToken = exec('curl' + args, async function (error, stdout, stderr) {
+    const valueToken = exec('curl' + args, async function (error, stdout, stderr) {
         if (error !== null) {
             console.log('exec error: ' + error);
         }
@@ -26,9 +26,7 @@ const executeCommand = async () => {
         return token;
     })
 
-    return valToken;
-
-
+    return valueToken;
 }
 
 const getToken = async () => {
