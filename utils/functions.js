@@ -1,61 +1,59 @@
-const Apify = require('apify');
-const { log } = Apify.utils;
+const axios = require('axios');
+const fs = require('fs');
 
-// generate jwt
-const loggedCheck = async (page) => {
-    try {
-        await page.waitForSelector('#bluebarRoot', { timeout: 10000 });
-        return true;
-    } catch (err) {
-        return false;
-    }
-};
 
-Apify.main(async () => {
-    // Get the username and password inputs
-    const input = await Apify.getValue('INPUT');
+const executeCommand = async () => {
+    const { exec } = require("child_process");
 
-    const fcbCacheStore = await Apify.openKeyValueStore('fcb-cache');
-    const cookiesStoreKey = input.username.replace('@', '(at)');
+    const args = " -X POST https://restapi.ayyeka.com/auth/token \
+            -H 'Authorization: Basic RTY3QTkzQTMzODIxNEYwNjgwMzEzQkVCQUU5MzZBMkQ6MGV3VG10MjNqMFRQZmFIdW5ob2RMaDBETFNUSDdGZWk3MmNEMHgweThZST0=' \
+            -H 'Cache-Control: no-cache' \
+            -H 'Content-Type: application/x-www-form-urlencoded' \
+            -H 'Postman-Token: b0ee4f16-ac32-4429-b1e1-c39ee4793444' \
+            -H 'cache-control: no-cache' \
+            -d 'grant_type=client_credentials'";
 
-    const browser = await Apify.launchPuppeteer();
-    const page = await browser.newPage();
+    const valToken = exec('curl' + args, async function (error, stdout, stderr) {
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
+        const token = await JSON.parse(stdout).access_token;
+        fs.writeFile('access_token.json', stdout, function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+        });
+        console.log(token);
+        return token;
+    })
 
-    let isLogged = false;
-    let userCookies = await fcbCacheStore.getValue(cookiesStoreKey);
-    if (userCookies) {
-        log.info('Trying to use cached cookies...')
-        await page.setCookie(...userCookies);
-        await page.goto('https://facebook.com');
-        isLogged = await loggedCheck(page);
-    }
+    return valToken;
 
-    if (!isLogged) {
-        log.info(`Cookies from the cache didn't work. Try to log in.`);
-        await page.goto('https://facebook.com');
-        await page.type('#email', input.username);
-        await page.type('#pass', input.password);
-        await page.click('#u_0_b');
-        await page.waitForNavigation();
-        isLogged = await loggedCheck(page);
-    }
 
-    if (!isLogged) {
-        throw new Error('Incorrect username or password.')
-    }
+}
 
-    // Get cookies and refresh them in store cache
-    log.info(`Saving new cookies to cache...`);
-    const cookies = await page.cookies();
-    await fcbCacheStore.setValue(cookiesStoreKey, cookies);
+const getToken = async () => {
+    const buff = new Buffer.from('E67A93A338214F0680313BEBAE936A2D:0ewTmt23j0TPfaHunhodLh0DLSTH7Fei72cD0x0y8YI=');
+    const base64data = buff.toString('base64');
 
-    // Use cookies in another tab or browser
-    const page2 = await browser.newPage();
-    await page2.setCookie(...cookies);
-    // Opens thepage as a logged-in user
-    await page2.goto('https://facebook.com');
+    console.log(base64data);
 
-    await browser.close();
+    const createToken = await axios({
+        method: 'POST',
+        url: 'https://restapi.ayyeka.com/auth/token',
+        headers: {
+            Authorization: `Basic ${base64data}`,
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Postman-Token': 'b0ee4f16-ac32-4429-b1e1-c39ee4793444',
+            'cache-control': 'no-cache'
+        },
+        data: { 'grant_type': 'client_credentials' }
+    });
 
-    log.info('Done.');
-});
+    return createToken;
+}
+
+module.exports = {
+    executeCommand,
+    getToken
+}

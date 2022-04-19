@@ -1,13 +1,11 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const puppeteer = require('puppeteer');
+const { executeCommand } = require('./utils/functions');
 require('dotenv').config();
 
 //config
 const port = process.env.PORT || 3002;
-const base_url = 'https://restapi.ayyeka.com/v2.0/';
-
 
 app.use(morgan('dev'));
 app.use(express.json());
