@@ -7,7 +7,7 @@ const SampleSchema = new Schema({
     absoluteVolumenflow: { type: String, required: true },
     totalizer1: { type: String, required: true },
     level: { type: String, required: true },
-    createdAt: Date
+    createdAt: { type: Date }
 }, {
     timestamps: false,
     versionKey: false
