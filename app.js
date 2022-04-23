@@ -19,14 +19,18 @@ app.use(express.urlencoded({ extended: true }));
 //routes
 // app.use(require('./routes'));
 
-//cron 
+//  CREA TOKEN PARA PODER EXTRAER DATOS DE LA API DE AYYEKA
 schedule.scheduleJob("*/1 * * * *", () => {
-    getToken();
+    getToken().then(data => {
+        console.log(`Token ${data}`);
+        insertDataStream();
+    })
 });
 
-schedule.scheduleJob("*/3 * * * *", () => {
-    insertDataStream();
-})
+// CREA EL INSERT A LA BASE DE DATOS
+// schedule.scheduleJob("*/2 * * * *", () => {
+//     insertDataStream();
+// })
 
 app.listen(port, () => {
     console.log(`Server running on port ${process.env.PORT}`);

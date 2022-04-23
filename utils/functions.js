@@ -20,12 +20,12 @@ const getToken = () => {
             if (error !== null) {
                 console.log('exec error: ' + error);
             }
-            // const token = JSON.parse(stdout).access_token;
-            // resolve(token);
             fs.writeFile('access_token.json', stdout, (err) => {
                 if (err) throw err;
                 console.log('Token Saved!');
             });
+            const token = JSON.parse(stdout).access_token;
+            resolve(token);
         })
     })
 }
