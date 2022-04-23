@@ -1,7 +1,7 @@
 const fs = require('fs');
 const axios = require('axios');
 const streamsData = require('../utils/streamsData');
-const { access_token } = require('../access_token.json');
+// const { access_token } = require('../access_token.json');
 const Sample = require('../models/Sample');
 
 const getToken = () => {
@@ -30,7 +30,7 @@ const getToken = () => {
     })
 }
 
-const insertDataStream = async () => {
+const insertDataStream = async (token) => {
     let siteDataToSave = {};
     for (let i = 0; i < streamsData.length; i++) {
         const siteId = streamsData[i][0].site_id;
@@ -42,7 +42,7 @@ const insertDataStream = async () => {
         for (let y = 0; y < streamsData[i].length; y++) {
             const streamId = streamsData[i][y].id;
             const valueSample = await axios.get(`${process.env.AYYEKA_URI}/stream/${streamId}/sample/last`, {
-                headers: { Authorization: access_token }
+                headers: { Authorization: token }
             });
             streamsData[i][y].sampleValue = valueSample.data.value;
         }

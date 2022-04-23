@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const fs = require('fs');
 const schedule = require('node-schedule');
 
 
@@ -21,9 +22,14 @@ app.use(express.urlencoded({ extended: true }));
 
 //  CREA TOKEN PARA PODER EXTRAER DATOS DE LA API DE AYYEKA
 schedule.scheduleJob("*/1 * * * *", () => {
-    getToken().then(data => {
-        console.log(`Token ${data}`);
-        insertDataStream();
+    // const emptyToken = { "access_token": '' };
+    // fs.writeFile('access_token.json', JSON.stringify(emptyToken), (err) => {
+    //     if (err) throw err;
+    //     console.log('Token Cleaned!');
+    // });
+    getToken().then(token => {
+        console.log(`Token ${token}`);
+        insertDataStream(token);
     })
 });
 
