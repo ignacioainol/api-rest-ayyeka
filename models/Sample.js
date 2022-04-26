@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 
 const SampleSchema = new Schema({
     siteId: { type: Number },
+    codigoObra: { type: String, required: true },
     namePool: { type: String, required: true },
     absoluteVolumenflow: { type: String, required: true },
     totalizer1: { type: String, required: true },

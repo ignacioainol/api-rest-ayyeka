@@ -7,7 +7,7 @@ const Sample = require('../models/Sample');
 const getToken = () => {
     const { exec } = require("child_process");
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const args = " -X POST https://restapi.ayyeka.com/auth/token \
         -H 'Authorization: Basic RTY3QTkzQTMzODIxNEYwNjgwMzEzQkVCQUU5MzZBMkQ6MGV3VG10MjNqMFRQZmFIdW5ob2RMaDBETFNUSDdGZWk3MmNEMHgweThZST0=' \
         -H 'Cache-Control: no-cache' \
@@ -20,12 +20,13 @@ const getToken = () => {
             if (error !== null) {
                 console.log('exec error: ' + error);
             }
-            fs.writeFile('access_token.json', stdout, (err) => {
-                if (err) throw err;
-                console.log('Token Saved!');
-            });
+
             const token = JSON.parse(stdout).access_token;
-            resolve(token);
+            if (token !== undefined) {
+                resolve(token);
+            } else {
+                reject('Token is undefined');
+            }
         })
     })
 }
@@ -37,6 +38,7 @@ const insertDataStream = async (token) => {
         const namePool = streamsData[i][0].siteName;
 
         siteDataToSave.siteId = siteId;
+        siteDataToSave.codigoObra = streamsData[i][0].codigo_obra;
         siteDataToSave.namePool = namePool;
 
         for (let y = 0; y < streamsData[i].length; y++) {
@@ -51,7 +53,7 @@ const insertDataStream = async (token) => {
         siteDataToSave.absoluteVolumenflow = streamsData[i][0].sampleValue;
         siteDataToSave.totalizer1 = streamsData[i][1].sampleValue;
         siteDataToSave.level = streamsData[i][2].sampleValue;
-        siteDataToSave.createdAt = new Date().toISOString()
+        siteDataToSave.createdAt = Date(new Date());
 
         const newSample = new Sample(siteDataToSave);
         await newSample.save();

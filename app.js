@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const fs = require('fs');
+// const fs = require('fs');
 const schedule = require('node-schedule');
 
 
@@ -18,25 +18,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //routes
-// app.use(require('./routes'));
+app.use(require('./routes'));
 
 //  CREA TOKEN PARA PODER EXTRAER DATOS DE LA API DE AYYEKA
-schedule.scheduleJob("*/1 * * * *", () => {
-    // const emptyToken = { "access_token": '' };
-    // fs.writeFile('access_token.json', JSON.stringify(emptyToken), (err) => {
-    //     if (err) throw err;
-    //     console.log('Token Cleaned!');
-    // });
-    getToken().then(token => {
-        console.log(`Token ${token}`);
-        insertDataStream(token);
-    })
+let countCreateToken = 0;
+schedule.scheduleJob("*/4 * * * *", () => {
+    getToken()
+        .then(token => {
+            countCreateToken = countCreateToken + 1;
+            console.log(`Token ${token}`);
+            console.log(`Times token generated ${countCreateToken}`);
+            insertDataStream(token);
+        })
+        .catch(err => console.log(err));
 });
-
-// CREA EL INSERT A LA BASE DE DATOS
-// schedule.scheduleJob("*/2 * * * *", () => {
-//     insertDataStream();
-// })
 
 app.listen(port, () => {
     console.log(`Server running on port ${process.env.PORT}`);
