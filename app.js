@@ -22,7 +22,7 @@ app.use(require('./routes'));
 
 //  CREA TOKEN PARA PODER EXTRAER DATOS DE LA API DE AYYEKA
 let countCreateToken = 0;
-schedule.scheduleJob("*/4 * * * *", () => {
+schedule.scheduleJob("* */1 * * *", () => {
     getToken()
         .then(token => {
             countCreateToken = countCreateToken + 1;
