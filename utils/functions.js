@@ -50,8 +50,8 @@ const insertDataStream = async (token) => {
         }
 
         const absoluteVolumenflowFormated = Math.trunc(streamsData[i][0].sampleValue).toString().length > 4 ?
-                                             (Number(streamsData[i][0].sampleValue) / 1000).toFixed(2) + " mimimi" 
-                                             : Number(streamsData[i][0].sampleValue).toFixed(2) + "paso dos";
+                                             (Number(streamsData[i][0].sampleValue) / 1000).toFixed(2) 
+                                             : Number(streamsData[i][0].sampleValue).toFixed(2);
         const totalizerFormated           = Math.trunc(streamsData[i][1].sampleValue);
         const levelFormated               = Number(streamsData[i][2].sampleValue).toFixed(2);
 
