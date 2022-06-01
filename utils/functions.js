@@ -49,11 +49,14 @@ const insertDataStream = async (token) => {
             streamsData[i][y].sampleValue = valueSample.data.value;
         }
 
-        const absoluteVolumenflowFormated = streamsData[i][0].sampleValue.length > 4 ? streamsData[i][0].sampleValue  / 1000 :  streamsData[i][0].sampleValue;
+        const absoluteVolumenflowFormated = Math.trunc(streamsData[i][0].sampleValue).toString().length > 4 ?
+                                             (Number(streamsData[i][0].sampleValue) / 1000).toFixed(2) + " mimimi" 
+                                             : Number(streamsData[i][0].sampleValue).toFixed(2) + "paso dos";
         const totalizerFormated           = Math.trunc(streamsData[i][1].sampleValue);
         const levelFormated               = Number(streamsData[i][2].sampleValue).toFixed(2);
 
-        siteDataToSave.absoluteVolumenflow = absoluteVolumenflowFormated;
+        //const volumenFlow = Math.trunc(streamsData[i][0].sampleValue); //volumenFlow.toString().length + " valor stringify";
+        siteDataToSave.absoluteVolumenflow = absoluteVolumenflowFormated; 
         siteDataToSave.totalizer1 = totalizerFormated;
         siteDataToSave.level = levelFormated;
         siteDataToSave.createdAt = Date(new Date());
