@@ -49,10 +49,13 @@ const insertDataStream = async (token) => {
             streamsData[i][y].sampleValue = valueSample.data.value;
         }
 
-        // console.log(streamsData[0][0].sampleValue);
-        siteDataToSave.absoluteVolumenflow = streamsData[i][0].sampleValue;
-        siteDataToSave.totalizer1 = streamsData[i][1].sampleValue;
-        siteDataToSave.level = streamsData[i][2].sampleValue;
+        const absoluteVolumenflowFormated = streamsData[i][0].sampleValue.length > 4 ? streamsData[i][0].sampleValue  / 1000 :  streamsData[i][0].sampleValue;
+        const totalizerFormated           = Math.trunc(streamsData[i][1].sampleValue);
+        const levelFormated               = Number(streamsData[i][2].sampleValue).toFixed(2);
+
+        siteDataToSave.absoluteVolumenflow = absoluteVolumenflowFormated;
+        siteDataToSave.totalizer1 = totalizerFormated;
+        siteDataToSave.level = levelFormated;
         siteDataToSave.createdAt = Date(new Date());
 
         const newSample = new Sample(siteDataToSave);
