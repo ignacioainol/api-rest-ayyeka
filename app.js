@@ -26,7 +26,7 @@ app.get('/', (req,res) => {
 
 //  CREA TOKEN PARA PODER EXTRAER DATOS DE LA API DE AYYEKA
 let countCreateToken = 0;
-schedule.scheduleJob("* */1 * * *", () => {
+schedule.scheduleJob("45 * * * *", () => {
     	let date_ob = new Date();
         let hours = date_ob.getHours();
         let minutes = date_ob.getMinutes();
