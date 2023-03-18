@@ -12,3 +12,13 @@ JCVUQ5RllDdlBYRW96MlJDNVVZeC9LOEJvVnMrbWtyVmZwZz0=' \
 -H 'cache-control: no-cache' \
 -d 'grant_type=client_credentials'
 ```
+
+# env file vars
+
+```
+PORT=3002
+AYYEKA_URI=https://restapi.ayyeka.com/v2.0
+BASE_URL=http://localhost:3002
+MONGODB_URL=mongodb://localhost/ayyeka-db
+
+```
